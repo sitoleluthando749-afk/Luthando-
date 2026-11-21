@@ -1,0 +1,345 @@
+{
+  "entities": {
+    "TradingBot": {
+      "title": "TradingBot",
+      "description": "An automated algorithmic trading Expert Advisor (EA) product listed on PraiseTraders.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Display name of the trading bot (e.g., PRAISE SCALPER PRO V6+ ENGINE)."
+        },
+        "subtitle": {
+          "type": "string",
+          "description": "Technology subtitle (e.g., POWERED BY EA MOBILE CONNECT.)."
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed product description."
+        },
+        "originalPriceZar": {
+          "type": "integer",
+          "description": "Original price in South African Rand (ZAR)."
+        },
+        "promoPriceZar": {
+          "type": "integer",
+          "description": "Promotional Black Friday price in ZAR."
+        },
+        "whatsappDisplay": {
+          "type": "string",
+          "description": "Formatted WhatsApp phone number shown in the UI."
+        },
+        "whatsappE164": {
+          "type": "string",
+          "description": "Digits-only international WhatsApp phone number without leading plus."
+        },
+        "buttonLabel": {
+          "type": "string",
+          "description": "Call-to-action label on the purchase button."
+        },
+        "accentTheme": {
+          "type": "string",
+          "enum": ["EMERALD", "SAPPHIRE", "GOLD"],
+          "description": "Visual accent theme for the product card."
+        },
+        "presetImageKey": {
+          "type": "string",
+          "enum": ["praise_scalper", "gilbert_scalper", "dubai_skyline", "ea_mobile_connect", "custom"],
+          "description": "Bundled drawable key or custom indicator."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "Optional HTTPS image URL when replacing product image."
+        },
+        "localImageName": {
+          "type": "string",
+          "description": "Optional locally picked file name stored by admin."
+        },
+        "active": {
+          "type": "boolean",
+          "description": "Whether the product is active and visible to customers."
+        },
+        "sortOrder": {
+          "type": "integer",
+          "description": "Display ordering index."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when created (FieldValue.serverTimestamp())."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when last updated (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": [
+        "name",
+        "subtitle",
+        "description",
+        "originalPriceZar",
+        "promoPriceZar",
+        "whatsappDisplay",
+        "whatsappE164",
+        "buttonLabel",
+        "accentTheme",
+        "presetImageKey",
+        "imageUrl",
+        "localImageName",
+        "active",
+        "sortOrder",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Announcement": {
+      "title": "Announcement",
+      "description": "Brand or release announcement managed from the Admin Dashboard.",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Announcement headline."
+        },
+        "message": {
+          "type": "string",
+          "description": "Announcement body message."
+        },
+        "badgeLabel": {
+          "type": "string",
+          "description": "Short status pill label."
+        },
+        "active": {
+          "type": "boolean",
+          "description": "Whether the announcement is published."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server update timestamp."
+        }
+      },
+      "required": ["title", "message", "badgeLabel", "active", "createdAt", "updatedAt"]
+    },
+    "PromoOffer": {
+      "title": "PromoOffer",
+      "description": "Promotional offer displayed in the Black Friday Mega Sale section.",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Offer title."
+        },
+        "botName": {
+          "type": "string",
+          "description": "Target trading bot name."
+        },
+        "originalPriceZar": {
+          "type": "integer",
+          "description": "Original price in ZAR."
+        },
+        "promoPriceZar": {
+          "type": "integer",
+          "description": "Promotional price in ZAR."
+        },
+        "tagline": {
+          "type": "string",
+          "description": "Promotional tagline."
+        },
+        "active": {
+          "type": "boolean",
+          "description": "Whether this promotional offer is active."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server update timestamp."
+        }
+      },
+      "required": [
+        "title",
+        "botName",
+        "originalPriceZar",
+        "promoPriceZar",
+        "tagline",
+        "active",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "SiteSettings": {
+      "title": "SiteSettings",
+      "description": "Global site configuration managed by admins, including Recommended Broker URL and brand copy.",
+      "type": "object",
+      "properties": {
+        "recommendedBrokerUrl": {
+          "type": "string",
+          "description": "External brokerage referral link."
+        },
+        "recommendedBrokerHeading": {
+          "type": "string",
+          "description": "Broker section heading."
+        },
+        "recommendedBrokerDescription": {
+          "type": "string",
+          "description": "Broker section description."
+        },
+        "blackFridayHeading": {
+          "type": "string",
+          "description": "Black Friday section heading."
+        },
+        "blackFridaySlogan": {
+          "type": "string",
+          "description": "Black Friday slogan."
+        },
+        "blackFridayNotice": {
+          "type": "string",
+          "description": "Black Friday availability notice."
+        },
+        "eaConnectHeading": {
+          "type": "string",
+          "description": "EA Mobile Connect heading."
+        },
+        "eaConnectDescription": {
+          "type": "string",
+          "description": "EA Mobile Connect description."
+        },
+        "aboutHeading": {
+          "type": "string",
+          "description": "About section heading."
+        },
+        "aboutDescription": {
+          "type": "string",
+          "description": "About section description."
+        },
+        "riskDisclaimer": {
+          "type": "string",
+          "description": "Trading risk disclaimer."
+        },
+        "updatedBy": {
+          "type": "string",
+          "description": "UID of admin who last updated settings."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server update timestamp."
+        }
+      },
+      "required": [
+        "recommendedBrokerUrl",
+        "recommendedBrokerHeading",
+        "recommendedBrokerDescription",
+        "blackFridayHeading",
+        "blackFridaySlogan",
+        "blackFridayNotice",
+        "eaConnectHeading",
+        "eaConnectDescription",
+        "aboutHeading",
+        "aboutDescription",
+        "riskDisclaimer",
+        "updatedBy",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "AdminUser": {
+      "title": "AdminUser",
+      "description": "Authorized administrator record.",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "Admin email address."
+        },
+        "role": {
+          "type": "string",
+          "enum": ["ADMIN"],
+          "description": "Role identifier."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp."
+        }
+      },
+      "required": ["email", "role", "createdAt"]
+    },
+    "UserInquiry": {
+      "title": "UserInquiry",
+      "description": "User-scoped record of WhatsApp purchase or broker inquiry actions.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Owner Firebase UID."
+        },
+        "botName": {
+          "type": "string",
+          "description": "Product or partner name."
+        },
+        "whatsappNumber": {
+          "type": "string",
+          "description": "Destination WhatsApp number or label."
+        },
+        "channel": {
+          "type": "string",
+          "enum": ["WHATSAPP_BUY", "WHATSAPP_CONTACT", "BROKER_VISIT"],
+          "description": "Action channel."
+        },
+        "priceZar": {
+          "type": "integer",
+          "description": "Price at time of inquiry."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp."
+        }
+      },
+      "required": ["userId", "botName", "whatsappNumber", "channel", "priceZar", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/trading_bots/{botId}": {
+      "schema": { "$ref": "#/entities/TradingBot" },
+      "description": "Automated trading Expert Advisor catalog."
+    },
+    "/announcements/{announcementId}": {
+      "schema": { "$ref": "#/entities/Announcement" },
+      "description": "Active and archived announcements."
+    },
+    "/promo_offers/{offerId}": {
+      "schema": { "$ref": "#/entities/PromoOffer" },
+      "description": "Black Friday and promotional offers."
+    },
+    "/site_settings/{settingId}": {
+      "schema": { "$ref": "#/entities/SiteSettings" },
+      "description": "Global site configuration document ('global')."
+    },
+    "/admins/{userId}": {
+      "schema": { "$ref": "#/entities/AdminUser" },
+      "description": "Admin role grant records."
+    },
+    "/users/{userId}/inquiries/{inquiryId}": {
+      "schema": { "$ref": "#/entities/UserInquiry" },
+      "description": "Per-user action/inquiry log."
+    }
+  }
+}

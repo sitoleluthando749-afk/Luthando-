@@ -1,0 +1,6 @@
+{
+  "name": "PraiseTraders",
+  "description": "Algorithmic trading Expert Advisors (EAs) showcase, Black Friday deals, EA Mobile Connect, Razor Markets broker integration, and secure Admin Dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

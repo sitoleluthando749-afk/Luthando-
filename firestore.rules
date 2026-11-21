@@ -1,0 +1,224 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isBootstrappedAdmin() {
+      return isSignedIn() &&
+             ('email' in request.auth.token) &&
+             ('email_verified' in request.auth.token) &&
+             request.auth.token.email == 'sitoleluthando749@gmail.com' &&
+             request.auth.token.email_verified == true;
+    }
+
+    function isAdmin() {
+      return isBootstrappedAdmin() ||
+             (isSignedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid)));
+    }
+
+    function isValidTradingBot(data) {
+      return data.name is string && data.name.size() >= 1 && data.name.size() <= 100 &&
+             data.subtitle is string && data.subtitle.size() <= 120 &&
+             data.description is string && data.description.size() >= 1 && data.description.size() <= 1000 &&
+             data.originalPriceZar is int && data.originalPriceZar >= 0 && data.originalPriceZar <= 1000000 &&
+             data.promoPriceZar is int && data.promoPriceZar >= 0 && data.promoPriceZar <= 1000000 &&
+             data.whatsappDisplay is string && data.whatsappDisplay.size() >= 5 && data.whatsappDisplay.size() <= 30 &&
+             data.whatsappE164 is string && data.whatsappE164.size() >= 8 && data.whatsappE164.size() <= 20 &&
+             data.whatsappE164.matches('^[0-9]+$') &&
+             data.buttonLabel is string && data.buttonLabel.size() >= 1 && data.buttonLabel.size() <= 60 &&
+             data.accentTheme in ['EMERALD', 'SAPPHIRE', 'GOLD'] &&
+             data.presetImageKey in ['praise_scalper', 'gilbert_scalper', 'dubai_skyline', 'ea_mobile_connect', 'custom'] &&
+             data.imageUrl is string && data.imageUrl.size() <= 500 &&
+             data.localImageName is string && data.localImageName.size() <= 200 &&
+             data.active is bool &&
+             data.sortOrder is int && data.sortOrder >= 0 && data.sortOrder <= 1000 &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time;
+    }
+
+    function isValidAnnouncement(data) {
+      return data.title is string && data.title.size() >= 1 && data.title.size() <= 120 &&
+             data.message is string && data.message.size() >= 1 && data.message.size() <= 500 &&
+             data.badgeLabel is string && data.badgeLabel.size() >= 1 && data.badgeLabel.size() <= 40 &&
+             data.active is bool &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time;
+    }
+
+    function isValidPromoOffer(data) {
+      return data.title is string && data.title.size() >= 1 && data.title.size() <= 120 &&
+             data.botName is string && data.botName.size() >= 1 && data.botName.size() <= 100 &&
+             data.originalPriceZar is int && data.originalPriceZar >= 0 && data.originalPriceZar <= 1000000 &&
+             data.promoPriceZar is int && data.promoPriceZar >= 0 && data.promoPriceZar <= 1000000 &&
+             data.tagline is string && data.tagline.size() <= 200 &&
+             data.active is bool &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time;
+    }
+
+    function isValidSiteSettings(data) {
+      return data.recommendedBrokerUrl is string &&
+             data.recommendedBrokerUrl.size() >= 10 &&
+             data.recommendedBrokerUrl.size() <= 500 &&
+             data.recommendedBrokerUrl.matches('^https?://.*') &&
+             data.recommendedBrokerHeading is string && data.recommendedBrokerHeading.size() >= 1 && data.recommendedBrokerHeading.size() <= 120 &&
+             data.recommendedBrokerDescription is string && data.recommendedBrokerDescription.size() >= 1 && data.recommendedBrokerDescription.size() <= 500 &&
+             data.blackFridayHeading is string && data.blackFridayHeading.size() >= 1 && data.blackFridayHeading.size() <= 120 &&
+             data.blackFridaySlogan is string && data.blackFridaySlogan.size() >= 1 && data.blackFridaySlogan.size() <= 160 &&
+             data.blackFridayNotice is string && data.blackFridayNotice.size() >= 1 && data.blackFridayNotice.size() <= 160 &&
+             data.eaConnectHeading is string && data.eaConnectHeading.size() >= 1 && data.eaConnectHeading.size() <= 120 &&
+             data.eaConnectDescription is string && data.eaConnectDescription.size() >= 1 && data.eaConnectDescription.size() <= 500 &&
+             data.aboutHeading is string && data.aboutHeading.size() >= 1 && data.aboutHeading.size() <= 120 &&
+             data.aboutDescription is string && data.aboutDescription.size() >= 1 && data.aboutDescription.size() <= 600 &&
+             data.riskDisclaimer is string && data.riskDisclaimer.size() >= 1 && data.riskDisclaimer.size() <= 600 &&
+             data.updatedBy is string && data.updatedBy == request.auth.uid &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time;
+    }
+
+    function isValidAdminUser(data) {
+      return data.email is string && data.email.size() >= 3 && data.email.size() <= 120 &&
+             data.role == 'ADMIN' &&
+             data.createdAt is timestamp && data.createdAt <= request.time;
+    }
+
+    function isValidUserInquiry(data) {
+      return data.userId is string && data.userId == request.auth.uid &&
+             data.botName is string && data.botName.size() >= 1 && data.botName.size() <= 100 &&
+             data.whatsappNumber is string && data.whatsappNumber.size() >= 3 && data.whatsappNumber.size() <= 40 &&
+             data.channel in ['WHATSAPP_BUY', 'WHATSAPP_CONTACT', 'BROKER_VISIT'] &&
+             data.priceZar is int && data.priceZar >= 0 && data.priceZar <= 1000000 &&
+             data.createdAt is timestamp && data.createdAt <= request.time;
+    }
+
+    match /trading_bots/{botId} {
+      allow get: if isValidId(botId) && (isAdmin() || (isSignedIn() && existing().active == true));
+      allow list: if isAdmin() || (isSignedIn() && existing().active == true);
+      allow create: if isValidId(botId) && isAdmin() &&
+                       incoming().keys().hasAll([
+                         'name', 'subtitle', 'description', 'originalPriceZar', 'promoPriceZar',
+                         'whatsappDisplay', 'whatsappE164', 'buttonLabel', 'accentTheme',
+                         'presetImageKey', 'imageUrl', 'localImageName', 'active', 'sortOrder',
+                         'createdAt', 'updatedAt'
+                       ]) &&
+                       incoming().keys().hasOnly([
+                         'name', 'subtitle', 'description', 'originalPriceZar', 'promoPriceZar',
+                         'whatsappDisplay', 'whatsappE164', 'buttonLabel', 'accentTheme',
+                         'presetImageKey', 'imageUrl', 'localImageName', 'active', 'sortOrder',
+                         'createdAt', 'updatedAt'
+                       ]) &&
+                       isValidTradingBot(incoming());
+      allow update: if isValidId(botId) && isAdmin() &&
+                       isValidTradingBot(incoming()) &&
+                       incoming().createdAt == existing().createdAt &&
+                       incoming().diff(existing()).affectedKeys().hasOnly([
+                         'name', 'subtitle', 'description', 'originalPriceZar', 'promoPriceZar',
+                         'whatsappDisplay', 'whatsappE164', 'buttonLabel', 'accentTheme',
+                         'presetImageKey', 'imageUrl', 'localImageName', 'active', 'sortOrder',
+                         'updatedAt'
+                       ]);
+      allow delete: if isValidId(botId) && isAdmin();
+    }
+
+    match /announcements/{announcementId} {
+      allow get: if isValidId(announcementId) && (isAdmin() || (isSignedIn() && existing().active == true));
+      allow list: if isAdmin() || (isSignedIn() && existing().active == true);
+      allow create: if isValidId(announcementId) && isAdmin() &&
+                       incoming().keys().hasAll(['title', 'message', 'badgeLabel', 'active', 'createdAt', 'updatedAt']) &&
+                       incoming().keys().hasOnly(['title', 'message', 'badgeLabel', 'active', 'createdAt', 'updatedAt']) &&
+                       isValidAnnouncement(incoming());
+      allow update: if isValidId(announcementId) && isAdmin() &&
+                       isValidAnnouncement(incoming()) &&
+                       incoming().createdAt == existing().createdAt &&
+                       incoming().diff(existing()).affectedKeys().hasOnly(['title', 'message', 'badgeLabel', 'active', 'updatedAt']);
+      allow delete: if isValidId(announcementId) && isAdmin();
+    }
+
+    match /promo_offers/{offerId} {
+      allow get: if isValidId(offerId) && (isAdmin() || (isSignedIn() && existing().active == true));
+      allow list: if isAdmin() || (isSignedIn() && existing().active == true);
+      allow create: if isValidId(offerId) && isAdmin() &&
+                       incoming().keys().hasAll(['title', 'botName', 'originalPriceZar', 'promoPriceZar', 'tagline', 'active', 'createdAt', 'updatedAt']) &&
+                       incoming().keys().hasOnly(['title', 'botName', 'originalPriceZar', 'promoPriceZar', 'tagline', 'active', 'createdAt', 'updatedAt']) &&
+                       isValidPromoOffer(incoming());
+      allow update: if isValidId(offerId) && isAdmin() &&
+                       isValidPromoOffer(incoming()) &&
+                       incoming().createdAt == existing().createdAt &&
+                       incoming().diff(existing()).affectedKeys().hasOnly(['title', 'botName', 'originalPriceZar', 'promoPriceZar', 'tagline', 'active', 'updatedAt']);
+      allow delete: if isValidId(offerId) && isAdmin();
+    }
+
+    match /site_settings/{settingId} {
+      allow get: if isValidId(settingId) && settingId == 'global' && isSignedIn();
+      allow list: if isAdmin();
+      allow create: if isValidId(settingId) && settingId == 'global' && isAdmin() &&
+                       incoming().keys().hasAll([
+                         'recommendedBrokerUrl', 'recommendedBrokerHeading', 'recommendedBrokerDescription',
+                         'blackFridayHeading', 'blackFridaySlogan', 'blackFridayNotice',
+                         'eaConnectHeading', 'eaConnectDescription', 'aboutHeading', 'aboutDescription',
+                         'riskDisclaimer', 'updatedBy', 'createdAt', 'updatedAt'
+                       ]) &&
+                       incoming().keys().hasOnly([
+                         'recommendedBrokerUrl', 'recommendedBrokerHeading', 'recommendedBrokerDescription',
+                         'blackFridayHeading', 'blackFridaySlogan', 'blackFridayNotice',
+                         'eaConnectHeading', 'eaConnectDescription', 'aboutHeading', 'aboutDescription',
+                         'riskDisclaimer', 'updatedBy', 'createdAt', 'updatedAt'
+                       ]) &&
+                       isValidSiteSettings(incoming());
+      allow update: if isValidId(settingId) && settingId == 'global' && isAdmin() &&
+                       isValidSiteSettings(incoming()) &&
+                       incoming().createdAt == existing().createdAt &&
+                       incoming().diff(existing()).affectedKeys().hasOnly([
+                         'recommendedBrokerUrl', 'recommendedBrokerHeading', 'recommendedBrokerDescription',
+                         'blackFridayHeading', 'blackFridaySlogan', 'blackFridayNotice',
+                         'eaConnectHeading', 'eaConnectDescription', 'aboutHeading', 'aboutDescription',
+                         'riskDisclaimer', 'updatedBy', 'updatedAt'
+                       ]);
+      allow delete: if false;
+    }
+
+    match /admins/{userId} {
+      allow get: if isValidId(userId) && isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow list: if isAdmin();
+      allow create: if isValidId(userId) && isAdmin() &&
+                       incoming().keys().hasAll(['email', 'role', 'createdAt']) &&
+                       incoming().keys().hasOnly(['email', 'role', 'createdAt']) &&
+                       isValidAdminUser(incoming());
+      allow update: if isValidId(userId) && isAdmin() &&
+                       isValidAdminUser(incoming()) &&
+                       incoming().createdAt == existing().createdAt &&
+                       incoming().diff(existing()).affectedKeys().hasOnly(['email', 'role']);
+      allow delete: if isValidId(userId) && isAdmin();
+    }
+
+    match /users/{userId}/inquiries/{inquiryId} {
+      allow get: if isValidId(userId) && isValidId(inquiryId) && isSignedIn() && request.auth.uid == userId;
+      allow list: if isValidId(userId) && isSignedIn() && request.auth.uid == userId;
+      allow create: if isValidId(userId) && isValidId(inquiryId) && isSignedIn() && request.auth.uid == userId &&
+                       incoming().keys().hasAll(['userId', 'botName', 'whatsappNumber', 'channel', 'priceZar', 'createdAt']) &&
+                       incoming().keys().hasOnly(['userId', 'botName', 'whatsappNumber', 'channel', 'priceZar', 'createdAt']) &&
+                       isValidUserInquiry(incoming());
+      allow update: if false;
+      allow delete: if isValidId(userId) && isValidId(inquiryId) && isSignedIn() && request.auth.uid == userId;
+    }
+  }
+}

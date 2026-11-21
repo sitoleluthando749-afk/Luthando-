@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">PraiseTraders</string>
+    <string name="brand_title">PRAISETRADERS</string>
+    <string name="hero_welcome">WELCOME TO PRAISETRADERS</string>
+    <string name="hero_subtitle">POWERING THE FUTURE OF ALGORITHMIC TRADING.</string>
+    <string name="hero_description">Experience advanced automated trading technology powered by EA MOBILE CONNECT. Discover intelligent trading solutions designed for modern traders.</string>
+    <string name="cta_explore_bots">EXPLORE OUR TRADING BOTS</string>
+    <string name="cta_black_friday">VIEW BLACK FRIDAY DEALS</string>
+    <string name="cta_contact_us">CONTACT US</string>
+    <string name="nav_home">HOME</string>
+    <string name="nav_about">ABOUT US</string>
+    <string name="nav_bots">OUR BOTS</string>
+    <string name="nav_black_friday">BLACK FRIDAY SALE</string>
+    <string name="nav_ea_connect">EA MOBILE CONNECT</string>
+    <string name="nav_broker">RECOMMENDED BROKER</string>
+    <string name="nav_contact">CONTACT US</string>
+    <string name="nav_admin">ADMIN DASHBOARD</string>
+    <string name="brand_final_message">PRAISETRADERS — POWERING SMARTER TRADING THROUGH INNOVATION. PRECISION. TECHNOLOGY. INTELLIGENCE.</string>
+    <string name="default_risk_disclaimer">Trading financial instruments involves substantial risk. Automated trading systems do not guarantee profits. Past performance does not guarantee future results. Customers should understand the risks before using automated trading software.</string>
+</resources>
